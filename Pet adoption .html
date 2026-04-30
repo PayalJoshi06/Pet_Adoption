@@ -1,0 +1,1597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PawsHome — Find Your Forever Friend</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #FDF6EC;
+    --warm: #F5EDD8;
+    --orange: #E8724A;
+    --orange-light: #F4956E;
+    --orange-dark: #C85A34;
+    --green: #4A7C59;
+    --green-light: #7AB893;
+    --teal: #2D6A7F;
+    --brown: #6B4226;
+    --text: #2C1810;
+    --text-light: #6B5748;
+    --white: #FFFFFF;
+    --shadow: 0 4px 24px rgba(44,24,16,0.10);
+    --shadow-lg: 0 12px 48px rgba(44,24,16,0.16);
+    --radius: 16px;
+    --radius-sm: 10px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--text); min-height: 100vh; }
+  
+  /* ===== NAVBAR ===== */
+  nav {
+    position: sticky; top: 0; z-index: 1000;
+    background: rgba(253,246,236,0.96);
+    backdrop-filter: blur(12px);
+    border-bottom: 2px solid var(--warm);
+    padding: 0 24px;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 68px;
+    box-shadow: 0 2px 16px rgba(44,24,16,0.07);
+  }
+  .nav-logo { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+  .nav-logo .paw { font-size: 28px; }
+  .nav-logo span { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 900; color: var(--orange); }
+  .nav-links { display: flex; align-items: center; gap: 4px; }
+  .nav-links a {
+    font-size: 14px; font-weight: 500; color: var(--text-light);
+    padding: 8px 14px; border-radius: 8px; cursor: pointer;
+    transition: all 0.2s; text-decoration: none; white-space: nowrap;
+  }
+  .nav-links a:hover, .nav-links a.active { color: var(--orange); background: rgba(232,114,74,0.1); }
+  .nav-cta {
+    background: var(--orange); color: white !important; border-radius: 24px !important;
+    padding: 8px 20px !important;
+  }
+  .nav-cta:hover { background: var(--orange-dark); color: white !important; }
+  .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 8px; }
+  .hamburger span { display: block; width: 24px; height: 2px; background: var(--text); border-radius: 2px; transition: 0.3s; }
+  .mobile-menu {
+    display: none; position: fixed; top: 68px; left: 0; right: 0; bottom: 0;
+    background: var(--cream); z-index: 999; padding: 24px;
+    flex-direction: column; gap: 8px;
+  }
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a {
+    font-size: 18px; font-weight: 500; color: var(--text); padding: 14px 16px;
+    border-radius: 10px; cursor: pointer; text-decoration: none;
+    border-bottom: 1px solid var(--warm);
+  }
+  .mobile-menu a:hover { background: var(--warm); color: var(--orange); }
+  @media(max-width:768px) {
+    .nav-links { display: none; }
+    .hamburger { display: flex; }
+  }
+
+  /* ===== PAGES ===== */
+  .page { display: none; animation: fadeIn 0.4s ease; }
+  .page.active { display: block; }
+  @keyframes fadeIn { from { opacity:0; transform: translateY(12px); } to { opacity:1; transform: none; } }
+
+  /* ===== HERO ===== */
+  .hero {
+    background: linear-gradient(135deg, #FDF6EC 0%, #F5EDD8 60%, #FDDFC0 100%);
+    padding: 72px 24px 56px;
+    text-align: center;
+    position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; top: -80px; right: -80px;
+    width: 320px; height: 320px;
+    background: radial-gradient(circle, rgba(232,114,74,0.15) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif; font-size: clamp(36px,6vw,64px);
+    font-weight: 900; line-height: 1.1; color: var(--text); margin-bottom: 20px;
+  }
+  .hero h1 span { color: var(--orange); }
+  .hero p { font-size: clamp(15px,2.5vw,18px); color: var(--text-light); max-width: 560px; margin: 0 auto 36px; line-height: 1.7; }
+  .hero-btns { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 14px 28px; border-radius: 32px; font-size: 15px; font-weight: 600;
+    cursor: pointer; border: none; transition: all 0.25s; text-decoration: none;
+  }
+  .btn-primary { background: var(--orange); color: white; box-shadow: 0 4px 16px rgba(232,114,74,0.35); }
+  .btn-primary:hover { background: var(--orange-dark); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(232,114,74,0.4); }
+  .btn-outline { background: transparent; color: var(--orange); border: 2px solid var(--orange); }
+  .btn-outline:hover { background: var(--orange); color: white; }
+  .btn-green { background: var(--green); color: white; }
+  .btn-green:hover { background: #3a6348; transform: translateY(-2px); }
+  .stats-row {
+    display: flex; justify-content: center; gap: clamp(24px,4vw,64px);
+    margin-top: 48px; flex-wrap: wrap;
+  }
+  .stat { text-align: center; }
+  .stat .num { font-family: 'Playfair Display', serif; font-size: 36px; font-weight: 900; color: var(--orange); }
+  .stat .label { font-size: 13px; color: var(--text-light); margin-top: 2px; }
+
+  /* ===== SECTION TITLES ===== */
+  .section { padding: 60px 24px; max-width: 1200px; margin: 0 auto; }
+  .section-title { font-family: 'Playfair Display', serif; font-size: clamp(26px,4vw,40px); font-weight: 900; margin-bottom: 8px; }
+  .section-sub { color: var(--text-light); font-size: 15px; margin-bottom: 36px; }
+
+  /* ===== FILTERS ===== */
+  .filters { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 32px; align-items: center; }
+  .filter-btn {
+    padding: 8px 20px; border-radius: 24px; border: 2px solid var(--warm);
+    background: white; font-size: 14px; font-weight: 500; cursor: pointer;
+    transition: all 0.2s; color: var(--text-light);
+  }
+  .filter-btn.active, .filter-btn:hover { border-color: var(--orange); background: var(--orange); color: white; }
+  .search-bar {
+    flex: 1; min-width: 200px; max-width: 340px;
+    display: flex; align-items: center; gap: 8px;
+    background: white; border: 2px solid var(--warm); border-radius: 32px;
+    padding: 8px 16px;
+  }
+  .search-bar input { border: none; outline: none; font-size: 14px; width: 100%; background: transparent; color: var(--text); }
+
+  /* ===== PET CARDS ===== */
+  .pets-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px,1fr)); gap: 24px; }
+  .pet-card {
+    background: white; border-radius: var(--radius); overflow: hidden;
+    box-shadow: var(--shadow); transition: all 0.3s; cursor: pointer;
+    border: 2px solid transparent; position: relative;
+  }
+  .pet-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); border-color: var(--orange-light); }
+  .pet-card-img {
+    width: 100%; height: 200px; object-fit: cover; display: block;
+    background: var(--warm); position: relative;
+  }
+  .pet-card-img-placeholder {
+    width: 100%; height: 200px; background: linear-gradient(135deg, var(--warm), #FDDFC0);
+    display: flex; align-items: center; justify-content: center; font-size: 64px;
+  }
+  .badge {
+    position: absolute; top: 12px; left: 12px;
+    background: var(--orange); color: white; font-size: 12px; font-weight: 600;
+    padding: 4px 10px; border-radius: 12px;
+  }
+  .badge.cat { background: var(--teal); }
+  .badge.rabbit { background: var(--green); }
+  .badge.bird { background: #7B5EA7; }
+  .badge.other { background: var(--brown); }
+  .pet-card-body { padding: 18px; }
+  .pet-card-name { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; margin-bottom: 4px; }
+  .pet-card-info { font-size: 13px; color: var(--text-light); margin-bottom: 14px; }
+  .pet-card-info span { margin-right: 10px; }
+  .pet-card-footer { display: flex; gap: 8px; }
+  .pet-card-footer .btn { padding: 9px 16px; font-size: 13px; flex: 1; justify-content: center; }
+  .heart-btn {
+    width: 38px; height: 38px; border-radius: 50%;
+    background: var(--warm); border: none; cursor: pointer;
+    font-size: 18px; display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+  }
+  .heart-btn:hover, .heart-btn.liked { background: #FFE0E0; transform: scale(1.1); }
+
+  /* ===== ADD PET FORM ===== */
+  .form-card { background: white; border-radius: var(--radius); padding: 36px; box-shadow: var(--shadow); max-width: 640px; margin: 0 auto; }
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  @media(max-width:600px) { .form-grid { grid-template-columns: 1fr; } }
+  .form-group { display: flex; flex-direction: column; gap: 6px; }
+  .form-group.full { grid-column: 1/-1; }
+  label { font-size: 13px; font-weight: 600; color: var(--text); }
+  input, select, textarea {
+    border: 2px solid var(--warm); border-radius: 10px;
+    padding: 11px 14px; font-size: 14px; font-family: 'DM Sans', sans-serif;
+    color: var(--text); background: white; outline: none; transition: border-color 0.2s;
+  }
+  input:focus, select:focus, textarea:focus { border-color: var(--orange); }
+  textarea { resize: vertical; min-height: 90px; }
+  .img-upload-area {
+    border: 2px dashed var(--orange-light); border-radius: 12px;
+    padding: 28px 16px; text-align: center; cursor: pointer; transition: all 0.2s;
+    background: rgba(232,114,74,0.04);
+  }
+  .img-upload-area:hover { border-color: var(--orange); background: rgba(232,114,74,0.08); }
+  .img-upload-area .icon { font-size: 36px; margin-bottom: 8px; }
+  .img-upload-area p { font-size: 13px; color: var(--text-light); }
+  .img-preview { width: 100%; height: 180px; object-fit: cover; border-radius: 10px; margin-top: 12px; }
+  .img-tabs { display: flex; gap: 8px; margin-bottom: 12px; }
+  .img-tab { padding: 7px 16px; border-radius: 20px; border: 2px solid var(--warm); background: white; font-size: 13px; font-weight: 600; cursor: pointer; color: var(--text-light); transition: all 0.2s; }
+  .img-tab.active { border-color: var(--orange); background: var(--orange); color: white; }
+
+  /* ===== PET DETAIL MODAL ===== */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0; z-index: 2000;
+    background: rgba(44,24,16,0.5); backdrop-filter: blur(4px);
+    align-items: center; justify-content: center; padding: 20px;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: white; border-radius: 20px; max-width: 680px; width: 100%;
+    max-height: 90vh; overflow-y: auto; box-shadow: var(--shadow-lg);
+    animation: slideUp 0.35s ease;
+  }
+  @keyframes slideUp { from { transform: translateY(40px); opacity: 0; } to { transform: none; opacity: 1; } }
+  .modal-img { width: 100%; height: 280px; object-fit: cover; border-radius: 20px 20px 0 0; }
+  .modal-img-placeholder {
+    width: 100%; height: 280px; background: linear-gradient(135deg, var(--warm), #FDDFC0);
+    display: flex; align-items: center; justify-content: center; font-size: 96px;
+    border-radius: 20px 20px 0 0;
+  }
+  .modal-body { padding: 28px; }
+  .modal-name { font-family: 'Playfair Display', serif; font-size: 32px; font-weight: 900; margin-bottom: 6px; }
+  .modal-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+  .tag { background: var(--warm); color: var(--text-light); font-size: 12px; font-weight: 600; padding: 4px 12px; border-radius: 12px; }
+  .modal-desc { font-size: 15px; line-height: 1.7; color: var(--text-light); margin-bottom: 20px; }
+  .modal-contact { background: var(--warm); border-radius: 12px; padding: 16px; margin-bottom: 20px; }
+  .modal-contact h4 { font-weight: 700; margin-bottom: 8px; font-size: 14px; }
+  .modal-contact p { font-size: 14px; color: var(--text-light); margin-bottom: 4px; }
+  .modal-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+  .modal-close {
+    position: absolute; top: 16px; right: 16px; width: 36px; height: 36px;
+    border-radius: 50%; border: none; background: white; cursor: pointer;
+    font-size: 18px; display: flex; align-items: center; justify-content: center;
+    box-shadow: var(--shadow); z-index: 10;
+  }
+  .modal-wrapper { position: relative; }
+  .enquiry-form { margin-top: 20px; padding-top: 20px; border-top: 2px solid var(--warm); }
+  .enquiry-form h4 { font-family: 'Playfair Display', serif; font-size: 20px; margin-bottom: 14px; }
+
+  /* ===== CARE PAGE ===== */
+  .care-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 32px; }
+  .care-tab { padding: 10px 22px; border-radius: 28px; border: 2px solid var(--warm); background: white; font-size: 14px; font-weight: 600; cursor: pointer; color: var(--text-light); transition: all 0.2s; }
+  .care-tab.active { border-color: var(--orange); background: var(--orange); color: white; }
+  .care-content { display: none; }
+  .care-content.active { display: block; animation: fadeIn 0.3s; }
+  .care-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px,1fr)); gap: 24px; }
+  .care-card {
+    background: white; border-radius: var(--radius); padding: 24px;
+    box-shadow: var(--shadow); border-left: 4px solid var(--orange);
+  }
+  .care-card.green { border-color: var(--green); }
+  .care-card.teal { border-color: var(--teal); }
+  .care-card.purple { border-color: #7B5EA7; }
+  .care-card h3 { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+  .care-card ul { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+  .care-card ul li { font-size: 14px; color: var(--text-light); padding-left: 20px; position: relative; line-height: 1.5; }
+  .care-card ul li::before { content: '✦'; position: absolute; left: 0; color: var(--orange); font-size: 10px; top: 3px; }
+  .care-card.green ul li::before { color: var(--green); }
+  .care-card.teal ul li::before { color: var(--teal); }
+  .grooming-table { width: 100%; border-collapse: collapse; margin-top: 24px; background: white; border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); }
+  .grooming-table th { background: var(--orange); color: white; padding: 14px 16px; text-align: left; font-size: 14px; }
+  .grooming-table td { padding: 12px 16px; font-size: 14px; color: var(--text-light); border-bottom: 1px solid var(--warm); }
+  .grooming-table tr:last-child td { border-bottom: none; }
+  .grooming-table tr:hover td { background: rgba(232,114,74,0.05); }
+  .diet-timeline { display: flex; flex-direction: column; gap: 0; }
+  .diet-item { display: flex; gap: 16px; position: relative; padding-bottom: 24px; }
+  .diet-item::before { content: ''; position: absolute; left: 19px; top: 40px; bottom: 0; width: 2px; background: var(--warm); }
+  .diet-item:last-child::before { display: none; }
+  .diet-dot { width: 40px; height: 40px; border-radius: 50%; background: var(--orange); color: white; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+  .diet-info h4 { font-weight: 700; font-size: 15px; margin-bottom: 4px; }
+  .diet-info p { font-size: 13px; color: var(--text-light); line-height: 1.6; }
+
+  /* ===== VET PAGE ===== */
+  .vet-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px,1fr)); gap: 24px; }
+  .vet-card {
+    background: white; border-radius: var(--radius); padding: 22px;
+    box-shadow: var(--shadow); transition: all 0.3s; border-top: 4px solid var(--green);
+  }
+  .vet-card.shelter { border-color: var(--teal); }
+  .vet-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+  .vet-header { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 12px; }
+  .vet-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; background: rgba(74,124,89,0.12); flex-shrink: 0; }
+  .vet-icon.shelter { background: rgba(45,106,127,0.12); }
+  .vet-name { font-family: 'Playfair Display', serif; font-size: 17px; font-weight: 700; margin-bottom: 3px; }
+  .vet-type { font-size: 12px; color: var(--green); font-weight: 600; }
+  .vet-type.shelter { color: var(--teal); }
+  .vet-info { font-size: 13px; color: var(--text-light); margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+  .vet-actions { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
+  .vet-actions .btn { padding: 9px 16px; font-size: 13px; }
+  .emergency-banner {
+    background: linear-gradient(135deg, #C85A34, #E8724A);
+    color: white; border-radius: var(--radius); padding: 20px 24px;
+    margin-bottom: 32px; display: flex; align-items: center; gap: 14px;
+    flex-wrap: wrap;
+  }
+  .emergency-banner .icon { font-size: 32px; }
+  .emergency-banner h3 { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+  .emergency-banner p { font-size: 13px; opacity: 0.88; }
+  .location-map {
+    background: linear-gradient(135deg, #e8f5e9, #e3f2fd);
+    border-radius: var(--radius); height: 200px; display: flex; align-items: center;
+    justify-content: center; margin-bottom: 32px; border: 2px dashed var(--green-light);
+    flex-direction: column; gap: 8px; color: var(--green); font-weight: 600;
+  }
+  .location-map .big { font-size: 48px; }
+  .share-location-btn { background: var(--green); color: white; border: none; padding: 10px 22px; border-radius: 24px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+  .share-location-btn:hover { background: #3a6348; }
+  .map-info { font-size: 13px; color: var(--text-light); margin-top: 6px; }
+
+  /* ===== GUIDE PAGE ===== */
+  .guide-hero { background: linear-gradient(135deg, var(--teal), #1a4a5c); color: white; border-radius: var(--radius); padding: 40px; margin-bottom: 40px; text-align: center; }
+  .guide-hero h2 { font-family: 'Playfair Display', serif; font-size: 32px; font-weight: 900; margin-bottom: 10px; }
+  .guide-hero p { opacity: 0.85; font-size: 15px; }
+  .guide-steps { display: flex; flex-direction: column; gap: 24px; }
+  .guide-step { background: white; border-radius: var(--radius); padding: 26px; box-shadow: var(--shadow); display: flex; gap: 20px; }
+  .guide-step .step-num {
+    width: 48px; height: 48px; border-radius: 50%;
+    background: var(--orange); color: white; font-family: 'Playfair Display', serif;
+    font-size: 20px; font-weight: 900; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .guide-step h3 { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+  .guide-step p { font-size: 14px; color: var(--text-light); line-height: 1.65; }
+  .guide-tip { background: rgba(74,124,89,0.08); border: 2px solid rgba(74,124,89,0.2); border-radius: 10px; padding: 12px 16px; margin-top: 10px; font-size: 13px; color: var(--green); font-weight: 500; }
+  .faq-list { display: flex; flex-direction: column; gap: 12px; margin-top: 32px; }
+  .faq-item { background: white; border-radius: var(--radius-sm); box-shadow: var(--shadow); overflow: hidden; }
+  .faq-q { padding: 16px 20px; font-weight: 600; font-size: 15px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+  .faq-q:hover { color: var(--orange); }
+  .faq-a { display: none; padding: 0 20px 16px; font-size: 14px; color: var(--text-light); line-height: 1.65; }
+  .faq-item.open .faq-a { display: block; }
+  .faq-item.open .faq-arrow { transform: rotate(180deg); }
+  .faq-arrow { transition: transform 0.2s; }
+
+  /* ===== SUCCESS / TOAST ===== */
+  .toast {
+    position: fixed; bottom: 24px; right: 24px; z-index: 9999;
+    background: var(--green); color: white; padding: 14px 22px;
+    border-radius: 12px; font-size: 14px; font-weight: 600;
+    box-shadow: var(--shadow-lg); display: none;
+    animation: slideUp 0.3s ease;
+  }
+  .toast.show { display: block; }
+  .toast.error { background: #C85A34; }
+
+  /* ===== EMPTY STATE ===== */
+  .empty-state { text-align: center; padding: 60px 24px; }
+  .empty-state .emoji { font-size: 64px; margin-bottom: 16px; }
+  .empty-state h3 { font-family: 'Playfair Display', serif; font-size: 24px; margin-bottom: 8px; }
+  .empty-state p { color: var(--text-light); margin-bottom: 24px; }
+
+  /* ===== MISC ===== */
+  .chip { display: inline-flex; align-items: center; gap: 4px; background: rgba(232,114,74,0.12); color: var(--orange); font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 10px; }
+  .divider { border: none; border-top: 2px solid var(--warm); margin: 32px 0; }
+  .text-center { text-align: center; }
+  .mt-8 { margin-top: 8px; }
+  .mt-16 { margin-top: 16px; }
+  .mt-24 { margin-top: 24px; }
+  .flex-center { display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap; }
+  .footer {
+    background: var(--text); color: rgba(255,255,255,0.7);
+    padding: 40px 24px; text-align: center;
+    margin-top: 60px;
+  }
+  .footer .logo { font-family: 'Playfair Display', serif; color: var(--orange); font-size: 22px; font-weight: 900; margin-bottom: 10px; }
+  .footer p { font-size: 13px; line-height: 1.7; }
+
+  /* ===== ADOPTED PAGE ===== */
+  .adopted-hero {
+    background: linear-gradient(135deg, #1a4a5c 0%, #2D6A7F 50%, #4A7C59 100%);
+    padding: 56px 24px 48px; text-align: center; color: white; position: relative; overflow: hidden;
+  }
+  .adopted-hero::before {
+    content: '🏠'; font-size: 160px; position: absolute; right: -20px; top: -20px;
+    opacity: 0.07; line-height: 1;
+  }
+  .adopted-hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(28px,5vw,52px); font-weight: 900; margin-bottom: 12px; }
+  .adopted-hero p { font-size: 16px; opacity: 0.85; max-width: 500px; margin: 0 auto 28px; line-height: 1.65; }
+  .adopted-stats { display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; margin-top: 32px; }
+  .adopted-stat .num { font-family: 'Playfair Display', serif; font-size: 40px; font-weight: 900; color: #FFD580; }
+  .adopted-stat .label { font-size: 13px; opacity: 0.8; margin-top: 2px; }
+
+  .adopted-card {
+    background: white; border-radius: var(--radius); overflow: hidden;
+    box-shadow: var(--shadow); position: relative; border: 2px solid #e0f0e8;
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+  .adopted-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+  .adopted-ribbon {
+    position: absolute; top: 16px; right: -8px; z-index: 2;
+    background: var(--green); color: white; font-size: 12px; font-weight: 700;
+    padding: 5px 18px 5px 12px; letter-spacing: 0.5px;
+    clip-path: polygon(0 0, 100% 0, 92% 50%, 100% 100%, 0 100%);
+    box-shadow: -2px 2px 8px rgba(0,0,0,0.18);
+  }
+  .adopted-card-img { width: 100%; height: 190px; object-fit: cover; display: block; }
+  .adopted-card-img-placeholder {
+    width: 100%; height: 190px;
+    background: linear-gradient(135deg, #e0f0e8, #c8e6d4);
+    display: flex; align-items: center; justify-content: center; font-size: 60px;
+    filter: grayscale(0.1);
+  }
+  .adopted-card-body { padding: 18px; }
+  .adopted-card-name { font-family: 'Playfair Display', serif; font-size: 19px; font-weight: 700; margin-bottom: 4px; }
+  .adopted-card-meta { font-size: 13px; color: var(--text-light); margin-bottom: 10px; }
+  .adopted-by {
+    background: linear-gradient(90deg, #e8f5ee, #f0faf4);
+    border: 1.5px solid #b2dfc3; border-radius: 10px; padding: 10px 14px; margin-top: 10px;
+  }
+  .adopted-by .label { font-size: 11px; font-weight: 700; color: var(--green); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 3px; }
+  .adopted-by .name { font-size: 14px; font-weight: 600; color: var(--text); }
+  .adopted-by .date { font-size: 12px; color: var(--text-light); margin-top: 2px; }
+  .adopted-badge-row { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+  .adopted-badge { background: rgba(74,124,89,0.12); color: var(--green); font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 10px; }
+  .confetti-btn {
+    width: 100%; padding: 10px; border: none; border-radius: 10px;
+    background: linear-gradient(90deg, var(--green), #3a6348);
+    color: white; font-size: 13px; font-weight: 700; cursor: pointer;
+    margin-top: 12px; transition: opacity 0.2s;
+  }
+  .confetti-btn:hover { opacity: 0.88; }
+  .adopted-empty { text-align: center; padding: 80px 24px; }
+  .adopted-empty .big { font-size: 72px; margin-bottom: 16px; }
+  .adopted-empty h3 { font-family: 'Playfair Display', serif; font-size: 26px; margin-bottom: 10px; }
+  .adopted-empty p { color: var(--text-light); font-size: 15px; max-width: 380px; margin: 0 auto 24px; line-height: 1.65; }
+
+  /* Mark-adopted confirmation overlay */
+  .confirm-overlay {
+    display: none; position: fixed; inset: 0; z-index: 3000;
+    background: rgba(44,24,16,0.55); backdrop-filter: blur(6px);
+    align-items: center; justify-content: center; padding: 20px;
+  }
+  .confirm-overlay.open { display: flex; }
+  .confirm-box {
+    background: white; border-radius: 20px; padding: 36px 32px; max-width: 440px; width: 100%;
+    box-shadow: var(--shadow-lg); text-align: center; animation: slideUp 0.3s ease;
+  }
+  .confirm-box .icon { font-size: 56px; margin-bottom: 16px; }
+  .confirm-box h3 { font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 900; margin-bottom: 8px; }
+  .confirm-box p { font-size: 14px; color: var(--text-light); margin-bottom: 20px; line-height: 1.65; }
+  .confirm-fields { display: flex; flex-direction: column; gap: 10px; text-align: left; margin-bottom: 20px; }
+  .confirm-actions { display: flex; gap: 10px; }
+  .confirm-actions .btn { flex: 1; justify-content: center; }
+  .btn-grey { background: var(--warm); color: var(--text); }
+  .btn-grey:hover { background: #e8dcc8; }
+
+  /* Floating paw animation on adopt */
+  .paw-float {
+    position: fixed; pointer-events: none; z-index: 9998;
+    font-size: 28px; animation: pawFly 1.4s ease forwards;
+  }
+  @keyframes pawFly {
+    0% { opacity: 1; transform: translateY(0) scale(1) rotate(-10deg); }
+    100% { opacity: 0; transform: translateY(-180px) scale(1.6) rotate(20deg); }
+  }
+
+  @media(max-width:600px) {
+    .guide-step { flex-direction: column; }
+    .hero { padding: 48px 16px 40px; }
+    .section { padding: 40px 16px; }
+    .form-card { padding: 24px 16px; }
+    .confirm-box { padding: 28px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav>
+  <div class="nav-logo" onclick="showPage('home')">
+    <span class="paw">🐾</span>
+    <span>PawsHome</span>
+  </div>
+  <div class="nav-links">
+    <a onclick="showPage('home')" id="nav-home" class="active">🏠 Home</a>
+    <a onclick="showPage('pets')" id="nav-pets">🐶 Adopt</a>
+    <a onclick="showPage('add')" id="nav-add">➕ Add Pet</a>
+    <a onclick="showPage('care')" id="nav-care">❤️ Care Guide</a>
+    <a onclick="showPage('vet')" id="nav-vet">🏥 Find Vets</a>
+    <a onclick="showPage('adopted')" id="nav-adopted">🏠 Adopted</a>
+    <a onclick="showPage('guide')" id="nav-guide">📖 How to Use</a>
+  </div>
+  <div class="hamburger" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a onclick="showPage('home');toggleMenu()">🏠 Home</a>
+  <a onclick="showPage('pets');toggleMenu()">🐶 Adopt a Pet</a>
+  <a onclick="showPage('add');toggleMenu()">➕ Add a Pet</a>
+  <a onclick="showPage('care');toggleMenu()">❤️ Care & Health Guide</a>
+  <a onclick="showPage('vet');toggleMenu()">🏥 Find Vets & Shelters</a>
+  <a onclick="showPage('adopted');toggleMenu()">🏠 Adopted Pets</a>
+  <a onclick="showPage('guide');toggleMenu()">📖 How to Use This Site</a>
+</div>
+
+<!-- ============ HOME PAGE ============ -->
+<div class="page active" id="page-home">
+  <div class="hero">
+    <h1>Every Pet Deserves a<br><span>Forever Home 🐾</span></h1>
+    <p>Browse hundreds of adorable pets waiting to join your family. Adopt, don't shop — give a rescued animal the love they deserve.</p>
+    <div class="hero-btns">
+      <button class="btn btn-primary" onclick="showPage('pets')">🐶 Browse Pets</button>
+      <button class="btn btn-outline" onclick="showPage('add')">➕ List a Pet</button>
+    </div>
+    <div class="stats-row">
+      <div class="stat"><div class="num" id="statPets">0</div><div class="label">Pets Listed</div></div>
+      <div class="stat"><div class="num" id="statAdopted">120+</div><div class="label">Happy Adoptions</div></div>
+      <div class="stat"><div class="num">15+</div><div class="label">Partner Shelters</div></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Recently Added 🌟</div>
+    <div class="section-sub">Meet the newest friends looking for a home</div>
+    <div class="pets-grid" id="recentPets"></div>
+    <div class="text-center mt-24">
+      <button class="btn btn-primary" onclick="showPage('pets')">View All Pets →</button>
+    </div>
+  </div>
+
+  <div style="background: var(--warm); padding: 60px 24px;">
+    <div style="max-width:1000px;margin:0 auto;">
+      <div class="section-title text-center">Why Adopt? 💛</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:24px;margin-top:32px;">
+        <div style="text-align:center;padding:24px 16px;background:white;border-radius:16px;box-shadow:var(--shadow)">
+          <div style="font-size:40px;margin-bottom:12px">🏠</div>
+          <h3 style="font-family:'Playfair Display',serif;font-size:16px;margin-bottom:8px">Save a Life</h3>
+          <p style="font-size:13px;color:var(--text-light)">Adoption gives a second chance to animals in shelters and foster homes.</p>
+        </div>
+        <div style="text-align:center;padding:24px 16px;background:white;border-radius:16px;box-shadow:var(--shadow)">
+          <div style="font-size:40px;margin-bottom:12px">💰</div>
+          <h3 style="font-family:'Playfair Display',serif;font-size:16px;margin-bottom:8px">Affordable</h3>
+          <p style="font-size:13px;color:var(--text-light)">Adoption fees are much lower than buying from breeders.</p>
+        </div>
+        <div style="text-align:center;padding:24px 16px;background:white;border-radius:16px;box-shadow:var(--shadow)">
+          <div style="font-size:40px;margin-bottom:12px">🩺</div>
+          <h3 style="font-family:'Playfair Display',serif;font-size:16px;margin-bottom:8px">Health Checked</h3>
+          <p style="font-size:13px;color:var(--text-light)">Most adopted pets are vaccinated, neutered, and health-screened.</p>
+        </div>
+        <div style="text-align:center;padding:24px 16px;background:white;border-radius:16px;box-shadow:var(--shadow)">
+          <div style="font-size:40px;margin-bottom:12px">❤️</div>
+          <h3 style="font-family:'Playfair Display',serif;font-size:16px;margin-bottom:8px">Unconditional Love</h3>
+          <p style="font-size:13px;color:var(--text-light)">Rescued pets are known to be especially loyal and loving companions.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ PETS PAGE ============ -->
+<div class="page" id="page-pets">
+  <div class="section">
+    <div class="section-title">Find Your New Best Friend 🐾</div>
+    <div class="section-sub">Browse all available pets ready for adoption</div>
+    <div class="filters">
+      <div class="search-bar">
+        <span>🔍</span>
+        <input type="text" id="searchInput" placeholder="Search by name or breed…" oninput="renderPets()">
+      </div>
+      <button class="filter-btn active" onclick="setFilter('all',this)">All Pets</button>
+      <button class="filter-btn" onclick="setFilter('dog',this)">🐶 Dogs</button>
+      <button class="filter-btn" onclick="setFilter('cat',this)">🐱 Cats</button>
+      <button class="filter-btn" onclick="setFilter('rabbit',this)">🐰 Rabbits</button>
+      <button class="filter-btn" onclick="setFilter('bird',this)">🐦 Birds</button>
+      <button class="filter-btn" onclick="setFilter('other',this)">🐹 Others</button>
+    </div>
+    <div class="pets-grid" id="petsGrid"></div>
+    <div id="noPets" class="empty-state" style="display:none">
+      <div class="emoji">🔍</div>
+      <h3>No pets found</h3>
+      <p>Try a different filter or search term</p>
+      <button class="btn btn-primary" onclick="setFilter('all',document.querySelector('.filter-btn'))">Show All</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ ADD PET PAGE ============ -->
+<div class="page" id="page-add">
+  <div class="section">
+    <div class="section-title">List a Pet for Adoption ➕</div>
+    <div class="section-sub">Fill in the details to help a pet find their forever home</div>
+    <div class="form-card">
+      <div class="form-grid">
+        <div class="form-group full">
+          <label>Pet's Photo</label>
+          <div class="img-tabs">
+            <button class="img-tab active" onclick="switchImgTab('url',this)">🔗 URL</button>
+            <button class="img-tab" onclick="switchImgTab('upload',this)">📁 Upload File</button>
+          </div>
+          <div id="urlTab">
+            <input type="text" id="petImage" placeholder="https://example.com/pet.jpg" oninput="previewUrl()">
+          </div>
+          <div id="uploadTab" style="display:none">
+            <div class="img-upload-area" onclick="document.getElementById('fileInput').click()">
+              <div class="icon">📷</div>
+              <p>Click to upload a JPG or PNG photo</p>
+              <p style="font-size:11px;margin-top:4px">Max 5MB</p>
+            </div>
+            <input type="file" id="fileInput" accept="image/png,image/jpeg" style="display:none" onchange="handleFileUpload(event)">
+          </div>
+          <img id="imgPreview" class="img-preview" style="display:none">
+        </div>
+        <div class="form-group">
+          <label>Pet Name *</label>
+          <input type="text" id="petName" placeholder="e.g. Buddy">
+        </div>
+        <div class="form-group">
+          <label>Type *</label>
+          <select id="petType">
+            <option value="">Select type…</option>
+            <option value="dog">🐶 Dog</option>
+            <option value="cat">🐱 Cat</option>
+            <option value="rabbit">🐰 Rabbit</option>
+            <option value="bird">🐦 Bird</option>
+            <option value="other">🐹 Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Breed</label>
+          <input type="text" id="petBreed" placeholder="e.g. Golden Retriever">
+        </div>
+        <div class="form-group">
+          <label>Age</label>
+          <input type="text" id="petAge" placeholder="e.g. 2 years">
+        </div>
+        <div class="form-group">
+          <label>Gender</label>
+          <select id="petGender">
+            <option value="">Select…</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Location / City</label>
+          <input type="text" id="petLocation" placeholder="e.g. Mumbai, MH">
+        </div>
+        <div class="form-group full">
+          <label>Description</label>
+          <textarea id="petDesc" placeholder="Tell us about the pet's personality, habits, vaccinations, and special needs…"></textarea>
+        </div>
+        <div class="form-group">
+          <label>Contact Name *</label>
+          <input type="text" id="contactName" placeholder="Your name">
+        </div>
+        <div class="form-group">
+          <label>Contact Phone *</label>
+          <input type="text" id="contactPhone" placeholder="+91 9876543210">
+        </div>
+        <div class="form-group full">
+          <label>Contact Email</label>
+          <input type="email" id="contactEmail" placeholder="you@email.com">
+        </div>
+        <div class="form-group full">
+          <button class="btn btn-primary" style="width:100%;justify-content:center;padding:16px" onclick="addPet()">🐾 List This Pet for Adoption</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ CARE PAGE ============ -->
+<div class="page" id="page-care">
+  <div class="section">
+    <div class="section-title">Pet Health & Care Guide ❤️</div>
+    <div class="section-sub">Detailed care, diet, and grooming schedules for every pet type</div>
+    <div class="care-tabs">
+      <button class="care-tab active" onclick="setCareTab('dog',this)">🐶 Dogs</button>
+      <button class="care-tab" onclick="setCareTab('cat',this)">🐱 Cats</button>
+      <button class="care-tab" onclick="setCareTab('rabbit',this)">🐰 Rabbits</button>
+      <button class="care-tab" onclick="setCareTab('bird',this)">🐦 Birds</button>
+    </div>
+
+    <!-- DOG CARE -->
+    <div class="care-content active" id="care-dog">
+      <div class="care-grid">
+        <div class="care-card">
+          <h3>🏋️ Exercise Needs</h3>
+          <ul>
+            <li>Large breeds: 60–90 mins daily walk/run</li>
+            <li>Medium breeds: 45–60 mins exercise per day</li>
+            <li>Small breeds: 20–30 mins daily walks</li>
+            <li>At least 2 outdoor walks per day recommended</li>
+            <li>Mental stimulation with toys and puzzles is essential</li>
+            <li>Avoid intense exercise in extreme heat</li>
+          </ul>
+        </div>
+        <div class="care-card green">
+          <h3>💊 Vaccination Schedule</h3>
+          <ul>
+            <li>6–8 weeks: Distemper, Parvovirus (first dose)</li>
+            <li>10–12 weeks: DHPP combination vaccine</li>
+            <li>14–16 weeks: Rabies vaccine (mandatory)</li>
+            <li>12–16 months: Booster for all vaccines</li>
+            <li>Annual: Rabies, DHPP, Bordetella boosters</li>
+            <li>Every 3 years: Rabies after initial series</li>
+          </ul>
+        </div>
+        <div class="care-card teal">
+          <h3>🩺 Health Checkups</h3>
+          <ul>
+            <li>Puppy: every 3–4 weeks until 16 weeks old</li>
+            <li>Adult (1–7 yrs): once per year</li>
+            <li>Senior (7+ yrs): every 6 months</li>
+            <li>Monthly: flea and tick prevention check</li>
+            <li>Dental cleaning: every 6–12 months</li>
+            <li>Heartworm test: annually</li>
+          </ul>
+        </div>
+        <div class="care-card">
+          <h3>🚨 Warning Signs</h3>
+          <ul>
+            <li>Loss of appetite for more than 24 hours</li>
+            <li>Excessive vomiting or diarrhea</li>
+            <li>Laboured or rapid breathing</li>
+            <li>Swollen or distended abdomen</li>
+            <li>Sudden lethargy or collapse</li>
+            <li>Pale gums or bluish tongue — emergency!</li>
+          </ul>
+        </div>
+      </div>
+      <h3 style="font-family:'Playfair Display',serif;font-size:22px;margin:36px 0 16px">🍽️ Diet Guide</h3>
+      <div class="diet-timeline">
+        <div class="diet-item">
+          <div class="diet-dot">🌅</div>
+          <div class="diet-info">
+            <h4>Morning (7–8 AM)</h4>
+            <p>Dry kibble or wet food — 25–30% of daily portion. Fresh water always available. For puppies: 3–4 small meals per day. Adults: 2 meals per day.</p>
+          </div>
+        </div>
+        <div class="diet-item">
+          <div class="diet-dot">☀️</div>
+          <div class="diet-info">
+            <h4>Midday Snack (optional)</h4>
+            <p>Training treats, carrot sticks, apple slices (no seeds), plain cooked chicken. Keep treats under 10% of daily calories. Avoid grapes, raisins, onion, chocolate — these are toxic!</p>
+          </div>
+        </div>
+        <div class="diet-item">
+          <div class="diet-dot">🌙</div>
+          <div class="diet-info">
+            <h4>Evening (5–6 PM)</h4>
+            <p>Second main meal — 50–55% of daily portion. Balanced commercial food or home-cooked with vet approval. Include Omega-3 supplements for coat health.</p>
+          </div>
+        </div>
+        <div class="diet-item">
+          <div class="diet-dot">💧</div>
+          <div class="diet-info">
+            <h4>Hydration (All Day)</h4>
+            <p>Always provide fresh, clean water. Average dog needs ~30ml of water per kg of body weight per day. Monitor intake — excessive thirst may indicate illness.</p>
+          </div>
+        </div>
+      </div>
+      <h3 style="font-family:'Playfair Display',serif;font-size:22px;margin:36px 0 16px">✂️ Grooming Schedule</h3>
+      <table class="grooming-table">
+        <thead><tr><th>Task</th><th>Frequency</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td>Brushing (short coat)</td><td>2–3× per week</td><td>Use bristle brush; removes loose hair</td></tr>
+          <tr><td>Brushing (long coat)</td><td>Daily</td><td>Slicker brush to prevent matting</td></tr>
+          <tr><td>Bathing</td><td>Every 4–6 weeks</td><td>Use dog-specific shampoo; dry thoroughly</td></tr>
+          <tr><td>Nail trimming</td><td>Every 3–4 weeks</td><td>If you hear clicking on floor, it's time!</td></tr>
+          <tr><td>Ear cleaning</td><td>Every 2 weeks</td><td>Use vet-approved ear cleaner; avoid cotton buds deep inside</td></tr>
+          <tr><td>Teeth brushing</td><td>Daily (ideal), 3× week minimum</td><td>Use dog toothpaste; never human paste</td></tr>
+          <tr><td>Eye cleaning</td><td>As needed / weekly</td><td>Wipe gently with damp cloth</td></tr>
+          <tr><td>Paw care</td><td>After every outdoor walk</td><td>Check for cuts, thorns; moisturise pads in winter</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- CAT CARE -->
+    <div class="care-content" id="care-cat">
+      <div class="care-grid">
+        <div class="care-card">
+          <h3>🎮 Enrichment & Play</h3>
+          <ul>
+            <li>15–20 minutes of interactive play twice daily</li>
+            <li>Window perches and climbing trees are essential</li>
+            <li>Feather wands, laser pointers, puzzle feeders</li>
+            <li>Indoor cats need more stimulation than outdoor cats</li>
+            <li>Rotate toys to maintain interest</li>
+          </ul>
+        </div>
+        <div class="care-card green">
+          <h3>💊 Vaccination Schedule</h3>
+          <ul>
+            <li>6–8 weeks: FVRCP (panleukopenia, herpesvirus)</li>
+            <li>10–12 weeks: Second FVRCP dose</li>
+            <li>14–16 weeks: Rabies + third FVRCP</li>
+            <li>1 year later: FVRCP and Rabies boosters</li>
+            <li>Every 1–3 years: FVRCP depending on lifestyle</li>
+            <li>Annually: FeLV if outdoor/multi-cat household</li>
+          </ul>
+        </div>
+        <div class="care-card teal">
+          <h3>🏥 Litter Box Care</h3>
+          <ul>
+            <li>Rule: 1 box per cat + 1 extra</li>
+            <li>Scoop daily; full change every week</li>
+            <li>Unscented, clumping litter preferred by most cats</li>
+            <li>Place in quiet, accessible location</li>
+            <li>Watch for changes — may indicate UTI or stress</li>
+          </ul>
+        </div>
+        <div class="care-card">
+          <h3>🚨 Warning Signs</h3>
+          <ul>
+            <li>Sudden hiding or change in behaviour</li>
+            <li>Straining to urinate — vet immediately!</li>
+            <li>Not eating for 24+ hours</li>
+            <li>Discharge from eyes or nose</li>
+            <li>Rapid weight loss</li>
+          </ul>
+        </div>
+      </div>
+      <h3 style="font-family:'Playfair Display',serif;font-size:22px;margin:36px 0 16px">🍽️ Diet Guide</h3>
+      <div class="diet-timeline">
+        <div class="diet-item"><div class="diet-dot">🌅</div><div class="diet-info"><h4>Morning (7–8 AM)</h4><p>Wet food preferred over dry — helps with hydration. Cats are obligate carnivores; high protein is essential. Portion: ~50–80g wet food OR 30–40g dry kibble for average adult cat.</p></div></div>
+        <div class="diet-item"><div class="diet-dot">🌙</div><div class="diet-info"><h4>Evening (5–6 PM)</h4><p>Second meal — same quantity. For multi-cat homes, separate feeding stations prevent stress. Avoid dog food, onion, garlic, milk (most cats are lactose intolerant).</p></div></div>
+        <div class="diet-item"><div class="diet-dot">💧</div><div class="diet-info"><h4>Hydration Tip</h4><p>Many cats prefer running water — consider a pet fountain. Wet food provides 70–80% moisture. Low water intake can cause kidney issues in cats.</p></div></div>
+      </div>
+      <h3 style="font-family:'Playfair Display',serif;font-size:22px;margin:36px 0 16px">✂️ Grooming Schedule</h3>
+      <table class="grooming-table">
+        <thead><tr><th>Task</th><th>Frequency</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td>Brushing (short hair)</td><td>Twice per week</td><td>Reduces shedding and hairballs</td></tr>
+          <tr><td>Brushing (long hair)</td><td>Daily</td><td>Prevents painful matting</td></tr>
+          <tr><td>Bathing</td><td>Every 4–6 weeks (if needed)</td><td>Most cats self-groom; bathe only when necessary</td></tr>
+          <tr><td>Nail trimming</td><td>Every 2–3 weeks</td><td>Use cat-specific clippers; avoid the quick (pink area)</td></tr>
+          <tr><td>Ear cleaning</td><td>Monthly</td><td>Cotton ball with vet-approved solution only</td></tr>
+          <tr><td>Teeth brushing</td><td>3–4× per week</td><td>Dental chews can supplement brushing</td></tr>
+          <tr><td>Eye cleaning</td><td>As needed</td><td>Gently wipe discharge with warm damp cloth</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- RABBIT CARE -->
+    <div class="care-content" id="care-rabbit">
+      <div class="care-grid">
+        <div class="care-card green">
+          <h3>🏃 Exercise & Space</h3>
+          <ul>
+            <li>Minimum 3–4 hours of free roam daily outside cage</li>
+            <li>Cage: at least 4× the rabbit's body length</li>
+            <li>Bunnies are social; pairs are happier than singletons</li>
+            <li>Rabbit-proof your home (cables, toxic plants)</li>
+            <li>Outdoor runs must be predator-proof</li>
+          </ul>
+        </div>
+        <div class="care-card">
+          <h3>🥬 Diet Basics</h3>
+          <ul>
+            <li>80% of diet: unlimited fresh timothy hay</li>
+            <li>15%: fresh leafy greens (romaine, kale, parsley)</li>
+            <li>5%: quality pellets (1/4 cup per 2kg body weight)</li>
+            <li>Avoid sugary fruits; only small treats occasionally</li>
+            <li>Never feed iceberg lettuce, avocado, or onion</li>
+          </ul>
+        </div>
+        <div class="care-card teal">
+          <h3>💊 Health Care</h3>
+          <ul>
+            <li>Spay/neuter by 4–6 months — reduces cancer risk</li>
+            <li>Annual vet check with rabbit-savvy vet essential</li>
+            <li>VHD and myxomatosis vaccines where available</li>
+            <li>GI stasis is a life-threatening emergency in rabbits</li>
+            <li>Check teeth and nails monthly</li>
+          </ul>
+        </div>
+        <div class="care-card">
+          <h3>🚨 Emergency Signs</h3>
+          <ul>
+            <li>Not eating or producing droppings — vet immediately!</li>
+            <li>Head tilt (ear infection or neurological)</li>
+            <li>Laboured breathing or sneezing</li>
+            <li>Wet fur around mouth (dental issues)</li>
+            <li>Hind leg paralysis or dragging</li>
+          </ul>
+        </div>
+      </div>
+      <h3 style="font-family:'Playfair Display',serif;font-size:22px;margin:36px 0 16px">✂️ Grooming Schedule</h3>
+      <table class="grooming-table">
+        <thead><tr><th>Task</th><th>Frequency</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td>Brushing (short hair)</td><td>Weekly</td><td>More often during moulting season (spring/autumn)</td></tr>
+          <tr><td>Brushing (long hair/Angora)</td><td>Daily</td><td>Essential to prevent wool block</td></tr>
+          <tr><td>Bathing</td><td>Never full baths</td><td>Spot clean only; stress of baths can cause shock</td></tr>
+          <tr><td>Nail trimming</td><td>Every 4–6 weeks</td><td>Overgrown nails can curl and injure</td></tr>
+          <tr><td>Scent gland cleaning</td><td>Monthly</td><td>Two scent glands near tail; clean with cotton bud</td></tr>
+          <tr><td>Ear check</td><td>Weekly</td><td>Check for dark discharge (ear mites)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- BIRD CARE -->
+    <div class="care-content" id="care-bird">
+      <div class="care-grid">
+        <div class="care-card" style="border-color:#7B5EA7">
+          <h3>🏠 Housing & Environment</h3>
+          <ul>
+            <li>Cage should be as large as budget allows</li>
+            <li>Width more important than height for flight</li>
+            <li>Keep away from kitchen fumes and drafts</li>
+            <li>12 hours light, 12 hours dark for sleep cycle</li>
+            <li>Perches of varying sizes prevent foot problems</li>
+            <li>Temperature: 18–29°C ideal; no sudden changes</li>
+          </ul>
+        </div>
+        <div class="care-card green">
+          <h3>🥦 Diet Guide</h3>
+          <ul>
+            <li>Pellets: 60–70% of diet (species-appropriate)</li>
+            <li>Fresh vegetables: 20–30% (leafy greens, carrots, bell pepper)</li>
+            <li>Seeds: 10% only — seed-only diets cause malnutrition</li>
+            <li>Fresh water daily in clean bowl</li>
+            <li>Toxic: avocado, chocolate, caffeine, onion, salt</li>
+          </ul>
+        </div>
+        <div class="care-card teal">
+          <h3>💊 Health & Vet Care</h3>
+          <ul>
+            <li>Annual exam with an avian vet is essential</li>
+            <li>Many diseases in birds are silent until advanced</li>
+            <li>Psittacosis can spread to humans — keep area clean</li>
+            <li>Watch for fluffed feathers, nasal discharge, weight loss</li>
+            <li>Quarantine any new bird for 30 days</li>
+          </ul>
+        </div>
+        <div class="care-card" style="border-color:#7B5EA7">
+          <h3>🧠 Mental Stimulation</h3>
+          <ul>
+            <li>Parrots need 2–4 hours of interaction daily</li>
+            <li>Rotate toys weekly to prevent boredom</li>
+            <li>Foraging toys encourage natural behaviour</li>
+            <li>Talking, singing, and training strengthen bond</li>
+            <li>Mirror toys can reduce loneliness for solo birds</li>
+          </ul>
+        </div>
+      </div>
+      <h3 style="font-family:'Playfair Display',serif;font-size:22px;margin:36px 0 16px">✂️ Grooming Schedule</h3>
+      <table class="grooming-table">
+        <thead><tr><th>Task</th><th>Frequency</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td>Bathing / misting</td><td>2–3× per week</td><td>Many birds enjoy a fine mist or shallow dish; never force</td></tr>
+          <tr><td>Nail trimming</td><td>Every 4–8 weeks</td><td>Avian vet or groomer recommended for first time</td></tr>
+          <tr><td>Wing clipping</td><td>As needed (4–6 months)</td><td>Optional; consult vet — affects flight and safety</td></tr>
+          <tr><td>Beak check</td><td>Monthly</td><td>Overgrown beak needs avian vet attention</td></tr>
+          <tr><td>Cage cleaning</td><td>Tray: daily; full clean: weekly</td><td>Remove droppings daily; disinfect weekly</td></tr>
+          <tr><td>Food/water bowls</td><td>Daily wash</td><td>Bacteria grows quickly in bird food and water</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ============ VET PAGE ============ -->
+<div class="page" id="page-vet">
+  <div class="section">
+    <div class="section-title">Find Vets & Animal Shelters 🏥</div>
+    <div class="section-sub">Emergency contacts, clinics, and adoption shelters near you</div>
+
+    <div class="emergency-banner">
+      <div class="icon">🚨</div>
+      <div>
+        <h3>Pet Emergency? Act Fast!</h3>
+        <p>If your pet is having a seizure, cannot breathe, is bleeding severely, or is unconscious — call the nearest emergency vet immediately. Do not wait for an appointment.</p>
+      </div>
+    </div>
+
+    <div class="location-map">
+      <div class="big">📍</div>
+      <p>Share your location to find the nearest clinics</p>
+      <button class="share-location-btn" onclick="shareLocation()">📍 Use My Location</button>
+      <p class="map-info" id="locationStatus">Your location is used only to help you find nearby vets.</p>
+    </div>
+
+    <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:28px">
+      <button class="filter-btn active" onclick="setVetFilter('all',this)">All</button>
+      <button class="filter-btn" onclick="setVetFilter('vet',this)">🏥 Veterinary Clinics</button>
+      <button class="filter-btn" onclick="setVetFilter('shelter',this)">🏠 Animal Shelters</button>
+      <button class="filter-btn" onclick="setVetFilter('emergency',this)">🚨 24×7 Emergency</button>
+    </div>
+
+    <div class="vet-grid" id="vetGrid"></div>
+
+    <div style="background:var(--warm);border-radius:var(--radius);padding:28px;margin-top:40px">
+      <h3 style="font-family:'Playfair Display',serif;font-size:22px;margin-bottom:16px">📋 Share a Vet or Shelter</h3>
+      <p style="font-size:14px;color:var(--text-light);margin-bottom:20px">Know a good vet or shelter not listed here? Add their details to help the community.</p>
+      <div class="form-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+        <div class="form-group"><label>Name</label><input type="text" id="newVetName" placeholder="Clinic or shelter name"></div>
+        <div class="form-group"><label>Type</label><select id="newVetType"><option value="vet">Veterinary Clinic</option><option value="shelter">Animal Shelter</option><option value="emergency">24×7 Emergency</option></select></div>
+        <div class="form-group"><label>Address</label><input type="text" id="newVetAddress" placeholder="Full address"></div>
+        <div class="form-group"><label>Phone</label><input type="text" id="newVetPhone" placeholder="+91 98765 43210"></div>
+        <div class="form-group"><label>Hours</label><input type="text" id="newVetHours" placeholder="e.g. Mon–Sat 9AM–8PM"></div>
+        <div class="form-group"><label>Speciality (optional)</label><input type="text" id="newVetSpec" placeholder="Dogs, Cats, Exotic pets…"></div>
+      </div>
+      <button class="btn btn-green mt-16" onclick="addVet()">➕ Add to Directory</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ GUIDE PAGE ============ -->
+<div class="page" id="page-guide">
+  <div class="section">
+    <div class="guide-hero">
+      <div style="font-size:48px;margin-bottom:12px">📖</div>
+      <h2>How to Use PawsHome</h2>
+      <p>A complete guide to browsing, adopting, and listing pets on our platform</p>
+    </div>
+
+    <div class="guide-steps">
+      <div class="guide-step"><div class="step-num">1</div><div><h3>Browse Pets for Adoption</h3><p>Click <strong>Adopt</strong> in the navigation to see all available pets. Use the filter buttons to narrow by type (dogs, cats, rabbits, birds). The search bar lets you search by name or breed instantly.</p><div class="guide-tip">💡 Tip: Click any pet card to open the full detail view with description and contact info.</div></div></div>
+      <div class="guide-step"><div class="step-num">2</div><div><h3>Send an Adoption Enquiry</h3><p>On any pet's detail card, tap <strong>"Enquire / Adopt Me"</strong>. A form will appear for you to fill in your name, phone, and message. This sends your enquiry to the pet's listed contact. You can also call directly using the phone number shown.</p><div class="guide-tip">💡 Tip: Write a personal message about your home environment — it helps the owner decide!</div></div></div>
+      <div class="guide-step"><div class="step-num">3</div><div><h3>List a Pet for Adoption</h3><p>Go to <strong>Add Pet</strong> in the navigation. Fill in the pet's name, type, breed, age, gender, and a description. Upload a photo by entering a URL or uploading directly from your phone/computer as a PNG or JPG file. Add your contact details so interested adopters can reach you.</p><div class="guide-tip">💡 Tip: A good photo and detailed description get 5× more responses!</div></div></div>
+      <div class="guide-step"><div class="step-num">4</div><div><h3>Use the Care & Health Guide</h3><p>Tap <strong>Care Guide</strong> to access detailed information about dogs, cats, rabbits, and birds. Each section covers exercise, vaccinations, diet schedules with meal timings, grooming frequency, and emergency warning signs.</p><div class="guide-tip">💡 Tip: Bookmark this page — it's a handy reference for new and experienced pet owners alike!</div></div></div>
+      <div class="guide-step"><div class="step-num">5</div><div><h3>Find Vets & Shelters</h3><p>The <strong>Find Vets</strong> page lists veterinary clinics, animal shelters, and 24×7 emergency services with phone numbers and addresses. Tap <strong>Use My Location</strong> to find the nearest ones. You can also add a vet or shelter you know using the form at the bottom.</p><div class="guide-tip">💡 Tip: Save the emergency vet numbers in your phone now — you don't want to search in a panic!</div></div></div>
+      <div class="guide-step"><div class="step-num">6</div><div><h3>On Mobile or Desktop?</h3><p>PawsHome works perfectly on all devices. On mobile, tap the <strong>☰ menu</strong> in the top right to navigate. All features — photo upload, filtering, enquiries, and the care guide — are fully accessible on phones and tablets.</p><div class="guide-tip">💡 Tip: Add PawsHome to your home screen for quick access like a native app.</div></div></div>
+    </div>
+
+    <div style="margin-top:48px">
+      <div class="section-title" style="font-size:28px">Frequently Asked Questions 🙋</div>
+      <div class="faq-list">
+        <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Is PawsHome free to use? <span class="faq-arrow">▼</span></div><div class="faq-a">Yes! PawsHome is completely free for both adopters and people listing pets. We believe every animal deserves a home and don't charge any fees.</div></div>
+        <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">How do I contact a pet's owner? <span class="faq-arrow">▼</span></div><div class="faq-a">Click on any pet card to open the detail view. You'll see the contact name, phone number, and email (if provided). You can call them directly or use the "Enquire" form to send a message.</div></div>
+        <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Can I upload a photo from my phone? <span class="faq-arrow">▼</span></div><div class="faq-a">Absolutely! On the "Add Pet" page, click the "Upload File" tab. You can upload PNG or JPG images directly from your phone's gallery or camera roll. No URL needed.</div></div>
+        <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Is my information private? <span class="faq-arrow">▼</span></div><div class="faq-a">The contact information you provide when listing a pet is visible to anyone who views the pet's detail page. Only share information you're comfortable making public. Your location is only used locally in your browser to find nearby vets — it is never sent to a server.</div></div>
+        <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">How long will a listing stay active? <span class="faq-arrow">▼</span></div><div class="faq-a">Listings are stored in your browser's local storage. They will persist as long as you don't clear your browser data. If you need the pet to be removed from the listing, contact the site administrator.</div></div>
+        <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">What if I find an injured stray animal? <span class="faq-arrow">▼</span></div><div class="faq-a">Visit our Vets & Shelters page and call the nearest 24×7 emergency clinic or animal shelter. Many shelters will dispatch a rescue team. Keep the animal calm and in a quiet, contained space while you wait for help.</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ ADOPTED PAGE ============ -->
+<div class="page" id="page-adopted">
+  <div class="adopted-hero">
+    <h1>🏠 Forever Homes Found</h1>
+    <p>Every pet here has found their perfect family. Celebrating love, second chances, and happy tails! 🐾</p>
+    <div class="adopted-stats">
+      <div class="adopted-stat"><div class="num" id="adoptedCount">0</div><div class="label">Happy Adoptions</div></div>
+      <div class="adopted-stat"><div class="num" id="adoptedDogs">0</div><div class="label">Dogs Rehomed</div></div>
+      <div class="adopted-stat"><div class="num" id="adoptedCats">0</div><div class="label">Cats Rehomed</div></div>
+    </div>
+  </div>
+  <div class="section">
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:28px">
+      <div>
+        <div class="section-title" style="margin-bottom:4px">Adopted Animals 🎉</div>
+        <div class="section-sub" style="margin:0">These lucky pets have found their forever families</div>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="filter-btn active" id="af-all" onclick="setAdoptedFilter('all',this)">All</button>
+        <button class="filter-btn" id="af-dog" onclick="setAdoptedFilter('dog',this)">🐶 Dogs</button>
+        <button class="filter-btn" id="af-cat" onclick="setAdoptedFilter('cat',this)">🐱 Cats</button>
+        <button class="filter-btn" id="af-other" onclick="setAdoptedFilter('other',this)">🐾 Others</button>
+      </div>
+    </div>
+    <div class="pets-grid" id="adoptedGrid"></div>
+    <div id="adoptedEmpty" class="adopted-empty" style="display:none">
+      <div class="big">🏡</div>
+      <h3>No adoptions yet!</h3>
+      <p>When a pet finds their forever home, they'll appear here. Browse available pets and help one find a family today.</p>
+      <button class="btn btn-primary" onclick="showPage('pets')">🐶 Browse Available Pets</button>
+    </div>
+  </div>
+</div>
+
+<!-- CONFIRM ADOPT OVERLAY -->
+<div class="confirm-overlay" id="confirmOverlay">
+  <div class="confirm-box">
+    <div class="icon">🎊</div>
+    <h3>Mark as Adopted!</h3>
+    <p>Wonderful news! Fill in the adopter's details to move this pet to the <strong>Adopted</strong> page and celebrate their new journey.</p>
+    <div class="confirm-fields">
+      <input type="text" id="adopterName" placeholder="Adopter's name *" style="border:2px solid var(--warm);border-radius:10px;padding:11px 14px;font-size:14px;outline:none;font-family:inherit">
+      <input type="text" id="adopterPhone" placeholder="Adopter's phone (optional)" style="border:2px solid var(--warm);border-radius:10px;padding:11px 14px;font-size:14px;outline:none;font-family:inherit">
+      <input type="text" id="adopterCity" placeholder="Adopter's city / location (optional)" style="border:2px solid var(--warm);border-radius:10px;padding:11px 14px;font-size:14px;outline:none;font-family:inherit">
+      <textarea id="adopterNote" rows="2" placeholder="A short note (e.g. 'Found a loving family in Mumbai 🐾')" style="border:2px solid var(--warm);border-radius:10px;padding:11px 14px;font-size:14px;outline:none;resize:vertical;font-family:inherit"></textarea>
+    </div>
+    <div class="confirm-actions">
+      <button class="btn btn-grey" onclick="closeConfirm()">Cancel</button>
+      <button class="btn btn-green" onclick="confirmAdopt()">🏠 Confirm Adoption!</button>
+    </div>
+  </div>
+</div>
+<div class="modal-overlay" id="petModal">
+  <div class="modal-wrapper" style="max-width:680px;width:100%;position:relative">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal" id="modalContent"></div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<div class="footer">
+  <div class="logo">🐾 PawsHome</div>
+  <p>Connecting rescued pets with loving families.<br>Every adoption changes two lives — the pet's, and yours.</p>
+  <p style="margin-top:12px;font-size:12px;opacity:0.5">Built with ❤️ for animals everywhere</p>
+</div>
+
+<script>
+// ===== ADOPTED LOGIC =====
+let pendingAdoptId = null;
+let currentAdoptedFilter = 'all';
+
+function loadAdopted() {
+  const s = localStorage.getItem('pawshome_adopted');
+  return s ? JSON.parse(s) : [];
+}
+function saveAdopted(list) { localStorage.setItem('pawshome_adopted', JSON.stringify(list)); }
+
+function openConfirmAdopt(id) {
+  pendingAdoptId = id;
+  document.getElementById('adopterName').value = '';
+  document.getElementById('adopterPhone').value = '';
+  document.getElementById('adopterCity').value = '';
+  document.getElementById('adopterNote').value = '';
+  document.getElementById('confirmOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeConfirm() {
+  document.getElementById('confirmOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+  pendingAdoptId = null;
+}
+document.getElementById('confirmOverlay').addEventListener('click', function(e) {
+  if (e.target === this) closeConfirm();
+});
+
+function confirmAdopt() {
+  const adopterName = document.getElementById('adopterName').value.trim();
+  if (!adopterName) { showToast('Please enter the adopter\'s name.', true); return; }
+  const pets = loadPets();
+  const idx = pets.findIndex(p => p.id === pendingAdoptId);
+  if (idx === -1) { closeConfirm(); return; }
+  const pet = pets[idx];
+  // Add to adopted list
+  const adopted = loadAdopted();
+  adopted.unshift({
+    ...pet,
+    adoptedBy: adopterName,
+    adoptedPhone: document.getElementById('adopterPhone').value.trim(),
+    adoptedCity: document.getElementById('adopterCity').value.trim(),
+    adoptedNote: document.getElementById('adopterNote').value.trim(),
+    adoptedDate: new Date().toLocaleDateString('en-IN', { day:'numeric', month:'long', year:'numeric' })
+  });
+  saveAdopted(adopted);
+  // Remove from available pets
+  pets.splice(idx, 1);
+  savePets(pets);
+  closeConfirm();
+  closeModal();
+  spawnPawConfetti();
+  showToast(`🎉 ${pet.name} has been marked as adopted by ${adopterName}!`);
+  setTimeout(() => { showPage('adopted'); }, 1800);
+}
+
+function spawnPawConfetti() {
+  const emojis = ['🐾','🎉','❤️','🏠','✨','🌟'];
+  for (let i = 0; i < 14; i++) {
+    const el = document.createElement('div');
+    el.className = 'paw-float';
+    el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+    el.style.left = Math.random() * 90 + 5 + 'vw';
+    el.style.top = Math.random() * 60 + 20 + 'vh';
+    el.style.animationDelay = (Math.random() * 0.6) + 's';
+    el.style.fontSize = (20 + Math.random() * 18) + 'px';
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 2200);
+  }
+}
+
+function setAdoptedFilter(type, el) {
+  currentAdoptedFilter = type;
+  document.querySelectorAll('#page-adopted .filter-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  renderAdopted();
+}
+
+function renderAdopted() {
+  const all = loadAdopted();
+  const filtered = all.filter(p => currentAdoptedFilter === 'all' ||
+    (currentAdoptedFilter === 'other' ? !['dog','cat'].includes(p.type) : p.type === currentAdoptedFilter));
+  const grid = document.getElementById('adoptedGrid');
+  const empty = document.getElementById('adoptedEmpty');
+  // Update hero stats
+  document.getElementById('adoptedCount').textContent = all.length;
+  document.getElementById('adoptedDogs').textContent = all.filter(p => p.type === 'dog').length;
+  document.getElementById('adoptedCats').textContent = all.filter(p => p.type === 'cat').length;
+  if (!filtered.length) { grid.innerHTML = ''; empty.style.display = 'block'; return; }
+  empty.style.display = 'none';
+  const emoji = { dog:'🐶', cat:'🐱', rabbit:'🐰', bird:'🐦', other:'🐹' };
+  grid.innerHTML = filtered.map(pet => {
+    const em = emoji[pet.type] || '🐾';
+    const imgHTML = pet.image
+      ? `<img src="${pet.image}" class="adopted-card-img" alt="${pet.name}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="adopted-card-img-placeholder" style="display:none">${em}</div>`
+      : `<div class="adopted-card-img-placeholder">${em}</div>`;
+    return `
+      <div class="adopted-card">
+        ${imgHTML}
+        <div class="adopted-ribbon">✅ ADOPTED</div>
+        <div class="adopted-card-body">
+          <div class="adopted-card-name">${pet.name}</div>
+          <div class="adopted-card-meta">
+            ${pet.breed ? `🐾 ${pet.breed} &nbsp;` : ''}
+            ${pet.age ? `📅 ${pet.age} &nbsp;` : ''}
+            ${pet.gender ? `⚥ ${pet.gender}` : ''}
+          </div>
+          <div class="adopted-badge-row">
+            <span class="adopted-badge">${pet.type.charAt(0).toUpperCase()+pet.type.slice(1)}</span>
+            ${pet.location ? `<span class="adopted-badge">📍 ${pet.location}</span>` : ''}
+          </div>
+          <div class="adopted-by">
+            <div class="label">🏠 Adopted By</div>
+            <div class="name">${pet.adoptedBy}${pet.adoptedCity ? ' · ' + pet.adoptedCity : ''}</div>
+            <div class="date">📅 ${pet.adoptedDate}</div>
+            ${pet.adoptedNote ? `<div style="font-size:13px;color:var(--text-light);margin-top:6px;font-style:italic">"${pet.adoptedNote}"</div>` : ''}
+          </div>
+          <button class="confetti-btn" onclick="spawnPawConfetti()">🎉 Celebrate!</button>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+// ===== ORIGINAL JS =====
+let currentFilter = 'all';
+let currentVetFilter = 'all';
+let currentImgTab = 'url';
+let petImageData = '';
+
+const DEFAULT_PETS = [
+  { id: 1, name: 'Buddy', type: 'dog', breed: 'Golden Retriever', age: '3 years', gender: 'Male', location: 'Pune, MH', desc: 'Buddy is a gentle, playful golden retriever who loves cuddles and fetch. Vaccinated and neutered. Great with kids and other dogs. Looking for a yard with space to run!', image: '', contact: 'Rina Sharma', phone: '+91 98765 00001', email: 'rina@email.com', liked: false },
+  { id: 2, name: 'Whiskers', type: 'cat', breed: 'Persian Mix', age: '2 years', gender: 'Female', location: 'Mumbai, MH', desc: 'Whiskers is a calm, affectionate Persian mix who enjoys sitting on laps and watching birds from windows. Vaccinated, spayed, and litter-trained. Perfect indoor companion.', image: '', contact: 'Arjun Mehta', phone: '+91 98765 00002', email: 'arjun@email.com', liked: false },
+  { id: 3, name: 'Coco', type: 'rabbit', breed: 'Holland Lop', age: '1 year', gender: 'Male', location: 'Bangalore, KA', desc: 'Coco is an adorable Holland Lop with floppy ears and a curious personality. He loves fresh veggies and exploring. Neutered and litter-trained. Would do well with a bunny companion!', image: '', contact: 'Priya Nair', phone: '+91 98765 00003', email: '', liked: false },
+  { id: 4, name: 'Mango', type: 'dog', breed: 'Indie / Stray', age: '4 years', gender: 'Female', location: 'Delhi, DL', desc: 'Mango was rescued from the streets. She is loyal, loving, and incredibly smart. Vaccinated and spayed. A true survivor who deserves a warm home. Gets along well with other dogs.', image: '', contact: 'Sanjay Verma', phone: '+91 98765 00004', email: 'sanjay@email.com', liked: false },
+  { id: 5, name: 'Kiwi', type: 'bird', breed: 'Budgerigar', age: '8 months', gender: 'Male', location: 'Chennai, TN', desc: 'Kiwi is a vibrant green budgie who is learning to talk. Very social and loves music. Comes with a cage, food, and toys. Looking for a family who will give him lots of attention.', image: '', contact: 'Divya Krishnan', phone: '+91 98765 00005', email: '', liked: false },
+  { id: 6, name: 'Luna', type: 'cat', breed: 'Tabby', age: '5 months', gender: 'Female', location: 'Hyderabad, TS', desc: 'Luna is a playful tabby kitten who loves chasing toys and climbing everything she can find. First vaccinations done. Needs to be spayed. Excellent with gentle children.', image: '', contact: 'Ananya Reddy', phone: '+91 98765 00006', email: 'ananya@email.com', liked: false },
+];
+
+const DEFAULT_VETS = [
+  { id: 1, name: 'PetCare Veterinary Clinic', type: 'vet', address: '12, MG Road, Pune, Maharashtra 411001', phone: '+91 20 2345 6789', hours: 'Mon–Sat: 9AM–8PM, Sun: 10AM–2PM', spec: 'Dogs, Cats, Small Animals', emergency: false },
+  { id: 2, name: 'Apollo Pet Hospital', type: 'emergency', address: '45, Linking Road, Mumbai, Maharashtra 400050', phone: '+91 22 9876 5432', hours: '24×7 Emergency Available', spec: 'All Animals, Surgery, ICU', emergency: true },
+  { id: 3, name: 'SPCA Mumbai', type: 'shelter', address: 'Parel, Mumbai, Maharashtra 400012', phone: '+91 22 2413 0838', hours: 'Mon–Sat: 10AM–5PM', spec: 'Rescue, Adoption, Sterilisation', emergency: false },
+  { id: 4, name: 'Dr. Sharma Animal Clinic', type: 'vet', address: '7, Rajpur Road, Delhi 110054', phone: '+91 11 2765 4321', hours: 'Mon–Sun: 8AM–10PM', spec: 'Dogs, Cats, Exotic Birds', emergency: false },
+  { id: 5, name: 'Blue Cross Hyderabad', type: 'shelter', address: 'Jubilee Hills, Hyderabad, Telangana 500033', phone: '+91 40 2354 3000', hours: 'Mon–Sat: 9AM–6PM', spec: 'Rescue, Adoption, Vet Care', emergency: false },
+  { id: 6, name: 'Vets on Call Bangalore', type: 'emergency', address: 'Indiranagar, Bangalore, Karnataka 560038', phone: '+91 80 9988 7766', hours: '24×7 All Days', spec: 'Emergency, Home Visits', emergency: true },
+  { id: 7, name: 'Green Paws Clinic', type: 'vet', address: '33, Anna Salai, Chennai, Tamil Nadu 600002', phone: '+91 44 2234 5678', hours: 'Tue–Sun: 9AM–7PM', spec: 'Dogs, Cats, Rabbits, Birds', emergency: false },
+  { id: 8, name: 'Compassion for Animals', type: 'shelter', address: 'Koregaon Park, Pune, Maharashtra 411001', phone: '+91 20 1234 5678', hours: 'Mon–Fri: 10AM–4PM', spec: 'Rescue, Foster, Adoption', emergency: false },
+];
+
+function loadPets() {
+  const stored = localStorage.getItem('pawshome_pets');
+  if (stored) return JSON.parse(stored);
+  localStorage.setItem('pawshome_pets', JSON.stringify(DEFAULT_PETS));
+  return DEFAULT_PETS;
+}
+function savePets(pets) { localStorage.setItem('pawshome_pets', JSON.stringify(pets)); }
+
+function loadVets() {
+  const stored = localStorage.getItem('pawshome_vets');
+  if (stored) return JSON.parse(stored);
+  localStorage.setItem('pawshome_vets', JSON.stringify(DEFAULT_VETS));
+  return DEFAULT_VETS;
+}
+function saveVets(vets) { localStorage.setItem('pawshome_vets', JSON.stringify(vets)); }
+
+// ===== NAVIGATION =====
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  const navEl = document.getElementById('nav-' + id);
+  if (navEl) navEl.classList.add('active');
+  window.scrollTo(0, 0);
+  if (id === 'pets') renderPets();
+  if (id === 'home') renderRecent();
+  if (id === 'vet') renderVets();
+  if (id === 'adopted') renderAdopted();
+}
+
+function toggleMenu() {
+  document.getElementById('mobileMenu').classList.toggle('open');
+}
+
+// ===== RENDER PETS =====
+const emojiMap = { dog: '🐶', cat: '🐱', rabbit: '🐰', bird: '🐦', other: '🐹' };
+
+function petCardHTML(pet, container='pets') {
+  const emoji = emojiMap[pet.type] || '🐾';
+  const imgHTML = pet.image
+    ? `<img src="${pet.image}" class="pet-card-img" alt="${pet.name}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
+    + `<div class="pet-card-img-placeholder" style="display:none">${emoji}</div>`
+    : `<div class="pet-card-img-placeholder">${emoji}</div>`;
+  const badgeClass = pet.type === 'cat' ? 'cat' : pet.type === 'rabbit' ? 'rabbit' : pet.type === 'bird' ? 'bird' : pet.type === 'other' ? 'other' : '';
+  return `
+    <div class="pet-card" onclick="openPet(${pet.id})">
+      ${imgHTML}
+      <span class="badge ${badgeClass}">${pet.type.charAt(0).toUpperCase()+pet.type.slice(1)}</span>
+      <div class="pet-card-body">
+        <div class="pet-card-name">${pet.name}</div>
+        <div class="pet-card-info">
+          <span>🐾 ${pet.breed || 'Mixed'}</span>
+          <span>📅 ${pet.age || 'Unknown'}</span>
+          ${pet.gender ? `<span>⚥ ${pet.gender}</span>` : ''}
+          ${pet.location ? `<span>📍 ${pet.location}</span>` : ''}
+        </div>
+        <div class="pet-card-footer">
+          <button class="btn btn-primary" onclick="event.stopPropagation();openPet(${pet.id})">🐾 Adopt Me</button>
+          <button class="heart-btn ${pet.liked?'liked':''}" onclick="event.stopPropagation();toggleLike(${pet.id})">${pet.liked?'❤️':'🤍'}</button>
+        </div>
+      </div>
+    </div>`;
+}
+
+function renderPets() {
+  const pets = loadPets();
+  const search = (document.getElementById('searchInput')?.value || '').toLowerCase();
+  let filtered = pets.filter(p => {
+    const typeOk = currentFilter === 'all' || p.type === currentFilter;
+    const searchOk = !search || p.name.toLowerCase().includes(search) || (p.breed||'').toLowerCase().includes(search);
+    return typeOk && searchOk;
+  });
+  const grid = document.getElementById('petsGrid');
+  const noEl = document.getElementById('noPets');
+  if (!filtered.length) {
+    grid.innerHTML = '';
+    noEl.style.display = 'block';
+  } else {
+    grid.innerHTML = filtered.map(p => petCardHTML(p)).join('');
+    noEl.style.display = 'none';
+  }
+  document.getElementById('statPets').textContent = pets.length + '+';
+}
+
+function renderRecent() {
+  const pets = loadPets().slice(-3).reverse();
+  document.getElementById('recentPets').innerHTML = pets.map(p => petCardHTML(p,'home')).join('');
+  const adopted = loadAdopted();
+  document.getElementById('statPets').textContent = loadPets().length + '+';
+  // Update home adopted count stat
+  const statAdopted = document.getElementById('statAdopted');
+  if (statAdopted) statAdopted.textContent = (adopted.length + 120) + '+';
+}
+
+function setFilter(type, el) {
+  currentFilter = type;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  renderPets();
+}
+
+function toggleLike(id) {
+  const pets = loadPets();
+  const pet = pets.find(p => p.id === id);
+  if (pet) { pet.liked = !pet.liked; savePets(pets); renderPets(); }
+}
+
+// ===== PET MODAL =====
+function openPet(id) {
+  const pets = loadPets();
+  const pet = pets.find(p => p.id === id);
+  if (!pet) return;
+  const emoji = emojiMap[pet.type] || '🐾';
+  const imgHTML = pet.image
+    ? `<img src="${pet.image}" class="modal-img" alt="${pet.name}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="modal-img-placeholder" style="display:none">${emoji}</div>`
+    : `<div class="modal-img-placeholder">${emoji}</div>`;
+  document.getElementById('modalContent').innerHTML = `
+    ${imgHTML}
+    <div class="modal-body">
+      <div class="modal-name">${pet.name}</div>
+      <div class="modal-tags">
+        <span class="tag">${pet.type.charAt(0).toUpperCase()+pet.type.slice(1)}</span>
+        ${pet.breed ? `<span class="tag">${pet.breed}</span>` : ''}
+        ${pet.age ? `<span class="tag">📅 ${pet.age}</span>` : ''}
+        ${pet.gender ? `<span class="tag">⚥ ${pet.gender}</span>` : ''}
+        ${pet.location ? `<span class="tag">📍 ${pet.location}</span>` : ''}
+      </div>
+      ${pet.desc ? `<div class="modal-desc">${pet.desc}</div>` : ''}
+      <div class="modal-contact">
+        <h4>📞 Contact for Adoption</h4>
+        <p><strong>${pet.contact}</strong></p>
+        ${pet.phone ? `<p>📱 <a href="tel:${pet.phone}" style="color:var(--orange)">${pet.phone}</a></p>` : ''}
+        ${pet.email ? `<p>✉️ <a href="mailto:${pet.email}" style="color:var(--orange)">${pet.email}</a></p>` : ''}
+      </div>
+      <div class="modal-actions">
+        ${pet.phone ? `<a href="tel:${pet.phone}" class="btn btn-primary">📞 Call Now</a>` : ''}
+        ${pet.email ? `<a href="mailto:${pet.email}" class="btn btn-outline">✉️ Send Email</a>` : ''}
+        <button class="btn btn-green" onclick="openConfirmAdopt(${pet.id})">🏠 Mark as Adopted</button>
+      </div>
+      <div class="enquiry-form">
+        <h4>📝 Send Adoption Enquiry</h4>
+        <div style="display:flex;flex-direction:column;gap:12px;margin-top:10px">
+          <input type="text" id="enqName" placeholder="Your name *" style="border:2px solid var(--warm);border-radius:10px;padding:10px 14px;font-size:14px;outline:none">
+          <input type="text" id="enqPhone" placeholder="Your phone number *" style="border:2px solid var(--warm);border-radius:10px;padding:10px 14px;font-size:14px;outline:none">
+          <textarea id="enqMsg" rows="3" placeholder="Tell them about yourself and your home environment…" style="border:2px solid var(--warm);border-radius:10px;padding:10px 14px;font-size:14px;outline:none;resize:vertical;font-family:inherit"></textarea>
+          <button class="btn btn-green" onclick="sendEnquiry('${pet.name}', '${pet.contact}')">📩 Submit Enquiry</button>
+        </div>
+      </div>
+    </div>`;
+  document.getElementById('petModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  document.getElementById('petModal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.getElementById('petModal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+
+function sendEnquiry(petName, ownerName) {
+  const name = document.getElementById('enqName').value.trim();
+  const phone = document.getElementById('enqPhone').value.trim();
+  if (!name || !phone) { showToast('Please fill in your name and phone number.', true); return; }
+  closeModal();
+  showToast(`✅ Enquiry sent for ${petName}! ${ownerName} will contact you at ${phone}.`);
+}
+
+// ===== ADD PET =====
+function switchImgTab(tab, el) {
+  currentImgTab = tab;
+  document.querySelectorAll('.img-tab').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('urlTab').style.display = tab === 'url' ? 'block' : 'none';
+  document.getElementById('uploadTab').style.display = tab === 'upload' ? 'block' : 'none';
+  petImageData = '';
+  document.getElementById('imgPreview').style.display = 'none';
+}
+
+function previewUrl() {
+  const val = document.getElementById('petImage').value.trim();
+  const preview = document.getElementById('imgPreview');
+  if (val) { preview.src = val; preview.style.display = 'block'; petImageData = val; }
+  else preview.style.display = 'none';
+}
+
+function handleFileUpload(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  if (file.size > 5 * 1024 * 1024) { showToast('File too large. Max 5MB.', true); return; }
+  const reader = new FileReader();
+  reader.onload = function(ev) {
+    petImageData = ev.target.result;
+    const preview = document.getElementById('imgPreview');
+    preview.src = petImageData;
+    preview.style.display = 'block';
+  };
+  reader.readAsDataURL(file);
+}
+
+function addPet() {
+  const name = document.getElementById('petName').value.trim();
+  const type = document.getElementById('petType').value;
+  const contact = document.getElementById('contactName').value.trim();
+  const phone = document.getElementById('contactPhone').value.trim();
+  if (!name || !type || !contact || !phone) { showToast('Please fill in all required fields (*).', true); return; }
+  const pets = loadPets();
+  const newPet = {
+    id: Date.now(), name, type,
+    breed: document.getElementById('petBreed').value.trim(),
+    age: document.getElementById('petAge').value.trim(),
+    gender: document.getElementById('petGender').value,
+    location: document.getElementById('petLocation').value.trim(),
+    desc: document.getElementById('petDesc').value.trim(),
+    image: petImageData || (currentImgTab === 'url' ? document.getElementById('petImage').value.trim() : ''),
+    contact, phone,
+    email: document.getElementById('contactEmail').value.trim(),
+    liked: false
+  };
+  pets.push(newPet);
+  savePets(pets);
+  // Reset form
+  ['petName','petBreed','petAge','petLocation','petDesc','contactName','contactPhone','contactEmail','petImage'].forEach(id => { const el = document.getElementById(id); if(el) el.value=''; });
+  document.getElementById('petType').value = '';
+  document.getElementById('petGender').value = '';
+  document.getElementById('imgPreview').style.display = 'none';
+  petImageData = '';
+  showToast(`🎉 ${name} has been listed for adoption!`);
+  setTimeout(() => showPage('pets'), 1500);
+}
+
+// ===== VETS =====
+function renderVets() {
+  const vets = loadVets();
+  let filtered = vets.filter(v => {
+    if (currentVetFilter === 'all') return true;
+    if (currentVetFilter === 'emergency') return v.type === 'emergency';
+    return v.type === currentVetFilter;
+  });
+  document.getElementById('vetGrid').innerHTML = filtered.map(v => {
+    const isEmergency = v.type === 'emergency';
+    const isShelter = v.type === 'shelter';
+    const icon = isEmergency ? '🚨' : isShelter ? '🏠' : '🏥';
+    const label = isEmergency ? '24×7 Emergency' : isShelter ? 'Animal Shelter' : 'Veterinary Clinic';
+    return `
+      <div class="vet-card ${isShelter ? 'shelter' : ''}">
+        <div class="vet-header">
+          <div class="vet-icon ${isShelter ? 'shelter' : ''}">${icon}</div>
+          <div>
+            <div class="vet-name">${v.name}</div>
+            <div class="vet-type ${isShelter ? 'shelter' : ''}">${label}</div>
+          </div>
+        </div>
+        <div class="vet-info">📍 ${v.address}</div>
+        <div class="vet-info">🕐 ${v.hours}</div>
+        ${v.spec ? `<div class="vet-info">🐾 ${v.spec}</div>` : ''}
+        <div class="vet-actions">
+          <a href="tel:${v.phone}" class="btn btn-primary">📞 ${v.phone}</a>
+          <button class="btn btn-outline" onclick="shareVet('${v.name}', '${v.phone}', '${v.address}')">📤 Share</button>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function setVetFilter(type, el) {
+  currentVetFilter = type;
+  document.querySelectorAll('#page-vet .filter-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  renderVets();
+}
+
+function addVet() {
+  const name = document.getElementById('newVetName').value.trim();
+  const phone = document.getElementById('newVetPhone').value.trim();
+  const address = document.getElementById('newVetAddress').value.trim();
+  if (!name || !phone || !address) { showToast('Please enter name, phone, and address.', true); return; }
+  const vets = loadVets();
+  vets.push({
+    id: Date.now(), name,
+    type: document.getElementById('newVetType').value,
+    address, phone,
+    hours: document.getElementById('newVetHours').value.trim() || 'Call for hours',
+    spec: document.getElementById('newVetSpec').value.trim()
+  });
+  saveVets(vets);
+  ['newVetName','newVetAddress','newVetPhone','newVetHours','newVetSpec'].forEach(id => document.getElementById(id).value = '');
+  renderVets();
+  showToast('✅ Vet/Shelter added to the directory!');
+}
+
+function shareVet(name, phone, address) {
+  const text = `🏥 ${name}\n📞 ${phone}\n📍 ${address}\nShared via PawsHome 🐾`;
+  if (navigator.share) {
+    navigator.share({ title: name, text }).catch(() => {});
+  } else {
+    navigator.clipboard.writeText(text).then(() => showToast('📋 Details copied to clipboard!'));
+  }
+}
+
+function shareLocation() {
+  const btn = document.querySelector('.share-location-btn');
+  const status = document.getElementById('locationStatus');
+  if (!navigator.geolocation) { showToast('Geolocation is not supported on this device.', true); return; }
+  btn.textContent = '⏳ Getting location…';
+  navigator.geolocation.getCurrentPosition(pos => {
+    btn.textContent = '✅ Location Shared';
+    btn.style.background = '#4A7C59';
+    status.textContent = `📍 Located at ${pos.coords.latitude.toFixed(4)}, ${pos.coords.longitude.toFixed(4)}. Showing vets in your area below.`;
+    showToast('📍 Location found! Showing nearby clinics.');
+  }, () => {
+    btn.textContent = '📍 Use My Location';
+    showToast('Could not get location. Please check browser permissions.', true);
+  });
+}
+
+// ===== CARE TABS =====
+function setCareTab(type, el) {
+  document.querySelectorAll('.care-tab').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.care-content').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('care-' + type).classList.add('active');
+}
+
+// ===== FAQ =====
+function toggleFaq(el) {
+  const item = el.parentElement;
+  item.classList.toggle('open');
+}
+
+// ===== TOAST =====
+function showToast(msg, error=false) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (error ? ' error' : '');
+  setTimeout(() => { t.className = 'toast'; }, 3500);
+}
+
+// ===== INIT =====
+renderRecent();
+</script>
+</body>
+</html>
